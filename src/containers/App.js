@@ -1,10 +1,11 @@
 import React from 'react';
-import CardList from './CardList';
-import SearchBox from './SearchBox';
+import CardList from '../components/CardList';
+import SearchBox from '../components/SearchBox';
+import Scroll from '../components/Scroll';
 // import {robots} from './robots';
-import './SearchBox.css';
-import './Card.css';
-
+import '../components/SearchBox.css';
+import '../components/Card.css';
+import '../components/Scroll.css';
 
 
 class App extends React.Component {
@@ -18,11 +19,8 @@ class App extends React.Component {
 
 	  componentDidMount(){
 	  	fetch('https://jsonplaceholder.typicode.com/users')
-	  	.then(response => {
-	  		return response.json();
-	  	}).then(users => {
-	  		this.setState({robots: users})
-	  	})
+	  	.then(response => response.json())
+	  	.then(users => this.setState({robots: users}))
 	  }
 
 
@@ -31,24 +29,27 @@ class App extends React.Component {
 	    }
 
 
-		render(){
+		render() {
 			const filtredRobots = this.state.robots.filter(robot => {
 	  		return robot.name.toLowerCase().includes(this.state.searchfield.toLowerCase());
 	       })
-
+			if(this.state.robots.length === 0) {
+				return <h1 className="tc pink">LOADING</h1>
+			} else {		
 		return (
 			
-			 <main className="tc">
+			  <main className="tc">
 					<h1>RoboFriends</h1>
 					<SearchBox searchChange={this.onSearchChange}/>
-			        <CardList robots={filtredRobots}/>
-
-			 </main>
+					<Scroll>
+			            <CardList robots={filtredRobots}/>
+			        </Scroll>
+			  </main>
 		
-			
-		);
-	  }
-}
+		    );
+		 }
+   	  }
+  }
 
 
 
